@@ -1,0 +1,777 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Nexus Pro — xKiro</title>
+<meta name="description" content="AI Nexus Pro — chat, vision, tutor, quiz, web research, coding and more.">
+<style>
+:root{
+ --bg:#020817;--panel:#07162d;--panel2:#0a1d39;--line:#1b3b63;--text:#edf5ff;--muted:#8ea5c4;
+ --blue:#26a9ff;--violet:#6857ff;--cyan:#18d8ff;--green:#25d5a4;--orange:#ffac3d;--danger:#ff6278;
+ --shadow:0 22px 80px #0007
+}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:
+ radial-gradient(circle at 70% 0,#31226b28,transparent 30%),radial-gradient(circle at 100% 100%,#008cff12,transparent 30%),var(--bg);
+ color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input,textarea,select{font:inherit}button{cursor:pointer}
+.app{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+.sidebar{height:100vh;position:sticky;top:0;padding:17px 13px;background:#031024e8;border-right:1px solid #173354;display:flex;flex-direction:column;z-index:30}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 7px 20px}.logo{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-weight:1000;font-size:21px;background:linear-gradient(135deg,#7c64ff,#1bbcff);box-shadow:0 10px 32px #3c55ff55}.brand b{font-size:18px}.brand small{display:block;color:var(--muted);font-size:9px;margin-top:2px}
+.nav{display:grid;gap:4px}.nav button{border:0;background:transparent;color:#a9bbd4;border-radius:10px;text-align:left;padding:11px 10px;display:flex;align-items:center;gap:11px}.nav button:hover,.nav button.active{color:#fff;background:linear-gradient(90deg,#5c50f4,#367ff5);box-shadow:0 8px 25px #394fff33}.nav .ico{width:20px;text-align:center}
+.upgrade{margin-top:auto;border:1px solid #26456f;border-radius:14px;padding:14px;background:linear-gradient(145deg,#0a1d3a,#07162c)}.upgrade b{font-size:12px}.upgrade p{font-size:10px;line-height:1.5;color:var(--muted)}.upgrade button{width:100%;border:0;border-radius:8px;padding:9px;background:linear-gradient(90deg,#5c50f4,#367ff5);color:#fff;font-weight:800}.copy{font-size:9px;color:#5e7696;margin-top:12px}
+main{min-width:0;padding:15px 18px 30px}.mobilebar{display:none;justify-content:space-between;align-items:center;margin-bottom:10px}.mobilebar button{border:1px solid #294768;background:#091a33;color:#fff;border-radius:8px;padding:7px 10px}
+.top{display:flex;align-items:center;gap:12px}.search{flex:1;display:flex;align-items:center;max-width:800px;border:1px solid #1d3b60;background:#091a33;border-radius:12px;padding:0 12px;color:#7991b1}.search input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:#fff;padding:11px 9px}.kbd{border:1px solid #294361;border-radius:6px;padding:4px 7px;font-size:10px}.topactions{margin-left:auto;display:flex;gap:8px;align-items:center}.round{width:38px;height:38px;border-radius:50%;border:1px solid #213d61;background:#091a33;color:#fff}.profile{display:flex;align-items:center;gap:8px;margin-left:3px}.avatar{width:35px;height:35px;border-radius:50%;display:grid;place-items:center;background:#dce8ff;color:#17243b;font-weight:900}.profile small{display:block;color:#7e94b2;font-size:9px}
+.page{margin-top:27px}.hero{min-height:320px;border:1px solid #255295;border-radius:18px;padding:28px 24px;position:relative;overflow:hidden;background:
+ radial-gradient(circle at 85% 40%,#008dff45,transparent 28%),radial-gradient(circle at 76% 100%,#9d38ff44,transparent 36%),linear-gradient(135deg,#071d46,#090c40 64%,#29104e);box-shadow:var(--shadow)}
+.hero:after{content:"N";position:absolute;right:60px;top:20px;font-size:160px;font-weight:1000;color:#8dc9ff0b;transform:rotate(-12deg);pointer-events:none}.eyebrow{font-size:13px;color:#aec2dc}.hero h1{font-size:37px;line-height:1.08;margin:10px 0}.grad{color:#16baff}.hero p{max-width:620px;color:#a8bad3;font-size:13px;line-height:1.65}.heroPrompt{max-width:720px;position:relative;margin-top:23px}.heroPrompt input{width:100%;padding:15px 55px 15px 42px;border:1px solid #5d6ddd;border-radius:14px;background:#03132fd9;color:#fff;outline:0}.send{position:absolute;right:7px;top:7px;width:39px;height:39px;border:0;border-radius:11px;color:#fff;background:linear-gradient(135deg,#3caaff,#6552ff);font-size:18px}.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.chip{border:1px solid #2a4b77;background:#0a2142;color:#bed0e8;border-radius:20px;padding:7px 11px;font-size:10px}.chip:hover{border-color:#5e7db2;color:#fff}
+.sectionTitle{margin:24px 2px 12px}.sectionTitle h2{margin:0;font-size:19px}.sectionTitle p{margin:5px 0 0;color:#849ab7;font-size:11px}.features{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.card{min-height:152px;padding:15px;border:1px solid #1d3c63;border-radius:13px;background:linear-gradient(145deg,#081c38,#06152b);transition:.2s}.card:hover{transform:translateY(-2px);border-color:#4b70a5}.cardIcon{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,#6358ff,#18baff);margin-bottom:12px}.card:nth-child(3) .cardIcon{background:linear-gradient(135deg,#21d6a1,#14b9a8)}.card:nth-child(4) .cardIcon{background:linear-gradient(135deg,#ffad3d,#ff743c)}.card:nth-child(5) .cardIcon{background:linear-gradient(135deg,#ec4d9d,#7054ff)}.card:nth-child(6) .cardIcon{background:linear-gradient(135deg,#2ab8ff,#16d7e0)}.card:nth-child(7) .cardIcon{background:linear-gradient(135deg,#9d57ff,#4e83ff)}.card h3{font-size:12px;margin:0 0 6px}.card p{font-size:10px;line-height:1.5;color:#91a6c2;margin:0}.arrow{float:right;color:#23baff;font-size:18px}
+.lower{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:20px}.side{display:grid;gap:18px}.sideCard{border:1px solid #1b375b;border-radius:14px;background:#07172e;padding:15px}.sideCard h3{margin:0 0 12px;font-size:14px}.model{display:flex;align-items:center;gap:10px;padding:10px 2px;border-bottom:1px solid #172f50}.model:last-child{border-bottom:0}.mi{width:34px;height:34px;border-radius:10px;background:#19315a;display:grid;place-items:center}.model b{font-size:11px}.model small{display:block;color:#7f94b2;font-size:9px;margin-top:3px}.chev{margin-left:auto;color:#8da5c4}.tip{font-size:11px;line-height:1.65;color:#a9bbd3}.history{display:grid;gap:9px}.historyRow{display:flex;gap:9px;align-items:center;padding-bottom:9px;border-bottom:1px solid #172f50;font-size:10px}.historyRow:last-child{border:0}.historyRow i{width:30px;height:30px;border-radius:8px;background:#1b3560;display:grid;place-items:center;font-style:normal}.historyRow small{display:block;color:#6f86a5;margin-top:3px}.examples{display:grid;grid-template-columns:1fr 1fr;gap:10px}.example{border:1px solid #203e66;border-radius:10px;background:#091e3b;color:#bed0e7;padding:12px;text-align:left;font-size:10px}.example:hover{border-color:#5b7cad}.cta{margin-top:20px;border:1px solid #4d45ba;border-radius:14px;padding:17px 20px;background:linear-gradient(90deg,#17104e,#17215f,#32136b);display:flex;align-items:center;justify-content:space-between;gap:15px}.cta b{font-size:14px}.cta p{font-size:10px;color:#9db1ce;margin:5px 0 0}.cta button{border:0;border-radius:20px;padding:10px 18px;background:linear-gradient(90deg,#ba3ff3,#3d9cff);color:#fff;font-weight:800}
+.chatView{display:none;max-width:1080px;margin:27px auto 0}.chatHead{display:flex;justify-content:space-between;align-items:center;gap:12px}.chatHead h1{margin:0;font-size:24px}.chatHead p{margin:4px 0 0;color:#7f95b4;font-size:10px}.chatTools{display:flex;gap:7px;flex-wrap:wrap}.toolBtn{border:1px solid #28486e;background:#091b35;color:#bfd1e8;border-radius:9px;padding:8px 10px;font-size:10px}.toolBtn:hover{border-color:#5e7dab;color:#fff}.chatLog{min-height:430px;height:calc(100vh - 260px);overflow:auto;padding:8px 3px 15px}.msg{display:flex;margin:16px 0;gap:9px}.msg.user{justify-content:flex-end}.msgAvatar{flex:0 0 30px;width:30px;height:30px;border-radius:10px;background:linear-gradient(135deg,#6d5aff,#1caeff);display:grid;place-items:center;font-size:12px}.msg.user .msgAvatar{order:2;background:#17315a}.bubbleWrap{max-width:min(82%,780px)}.bubble{padding:13px 15px;border:1px solid #21466f;border-radius:15px;background:#0a1e3b;color:#e0ebf9;font-size:13px;line-height:1.7;overflow-wrap:anywhere}.msg.user .bubble{background:linear-gradient(135deg,#304bc9,#5745c2);border-color:#6370d9}.bubble p{margin:0 0 9px}.bubble p:last-child{margin-bottom:0}.bubble pre{margin:10px 0;background:#020b19;border:1px solid #1b3859;border-radius:9px;padding:11px;overflow:auto}.bubble code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px}.bubble ul{margin:7px 0 7px 20px;padding:0}.bubble strong{color:#fff}.messageActions{display:flex;gap:5px;margin-top:5px}.messageActions button{border:0;background:transparent;color:#7892b4;font-size:10px;padding:3px}.messageActions button:hover{color:#cfe0f5}.attachment{margin-top:8px;border:1px solid #2a4a70;border-radius:10px;overflow:hidden;background:#06142a}.attachment img{display:block;max-width:280px;max-height:220px;object-fit:contain}.attachment span{display:block;padding:7px;font-size:9px;color:#91a6c2}.composer{position:sticky;bottom:10px;border:1px solid #2a4a70;background:#07172e;border-radius:16px;padding:8px;box-shadow:0 18px 55px #0008}.attachPreview{display:none;align-items:center;gap:8px;padding:5px 5px 8px;border-bottom:1px solid #1a3454}.attachPreview.show{display:flex}.previewImg{width:48px;height:48px;object-fit:cover;border-radius:8px;border:1px solid #315477}.previewName{font-size:10px;color:#a7bad2;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.remove{border:0;background:#1a2f4d;color:#ff8b9c;border-radius:7px;padding:6px}.composeRow{display:flex;gap:7px;align-items:flex-end}.composeRow textarea{flex:1;min-height:48px;max-height:150px;resize:none;background:transparent;border:0;outline:0;color:#fff;padding:10px}.iconBtn{width:43px;height:43px;border:1px solid #28486d;border-radius:11px;background:#0a1d38;color:#bcd0e8}.iconBtn:hover{border-color:#5c7ca9;color:#fff}.sendBtn{width:48px;height:43px;border:0;border-radius:11px;background:linear-gradient(135deg,#39aaff,#6550ff);color:#fff;font-size:18px}.modeBar{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0}.mode{border:1px solid #28486e;background:#081a33;color:#a9bdd7;border-radius:18px;padding:6px 10px;font-size:9px}.mode.active{background:#273f9b;color:#fff;border-color:#5f70d7}
+.fileInput{display:none}.dropHint{font-size:9px;color:#6f86a5;margin-top:5px;text-align:center}
+.loading{display:inline-flex;gap:5px}.loading i{width:6px;height:6px;border-radius:50%;background:#8ab8ff;animation:b .8s infinite alternate}.loading i:nth-child(2){animation-delay:.15s}.loading i:nth-child(3){animation-delay:.3s}@keyframes b{to{transform:translateY(-5px);opacity:.3}}
+.drawerOverlay{display:none;position:fixed;inset:0;background:#0008;z-index:25}.drawerOverlay.show{display:block}.modal{display:none;position:fixed;inset:0;background:#0009;z-index:100;align-items:center;justify-content:center;padding:20px}.modal.show{display:flex}.modalBox{width:min(650px,100%);max-height:90vh;overflow:auto;border:1px solid #31527a;border-radius:16px;background:#07172e;padding:18px;box-shadow:0 30px 100px #000b}.modalBox h2{margin:0 0 5px}.modalBox p{font-size:11px;color:#8fa5c3;line-height:1.6}.modalBox textarea,.modalBox input{width:100%;border:1px solid #28486d;background:#06152b;color:#fff;border-radius:10px;padding:11px;outline:0}.modalActions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}.primary{border:0;background:linear-gradient(90deg,#5c50f4,#367ff5);color:#fff;border-radius:9px;padding:9px 14px;font-weight:800}.secondary{border:1px solid #29496e;background:#0a1c36;color:#bdd0e7;border-radius:9px;padding:9px 14px}
+.toast{position:fixed;right:18px;bottom:18px;background:#102846;border:1px solid #31547e;color:#e9f2ff;padding:10px 14px;border-radius:10px;font-size:12px;opacity:0;transform:translateY(10px);transition:.2s;z-index:200}.toast.show{opacity:1;transform:none}
+@media(max-width:1100px){.lower{grid-template-columns:1fr}.side{display:none}.features{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:720px){.app{display:block}.sidebar{position:fixed;left:min(-195px,-60vw);width:min(180px,60vw);max-width:180px;height:100dvh;padding:13px 10px;transition:transform .22s ease,left .22s ease;box-shadow:18px 0 45px #0009;z-index:40}.sidebar.open{left:0}.drawerOverlay{z-index:35}.brand{padding:3px 5px 14px;gap:8px}.brand .logo{width:36px;height:36px;border-radius:11px;font-size:18px}.brand b{font-size:15px}.brand small{font-size:8px}.nav{gap:2px}.nav button{padding:9px 7px;font-size:12px;gap:8px;border-radius:9px}.nav .ico{width:17px}.upgrade{padding:11px;margin-top:auto}.upgrade p{font-size:8px}.upgrade button{padding:8px;font-size:11px}.copy{font-size:8px}.mobilebar{display:flex}.profile,.kbd{display:none}.features{grid-template-columns:1fr 1fr}.hero{padding:23px 17px}.hero h1{font-size:29px}.hero:after{right:-20px}.examples{grid-template-columns:1fr}.cta{flex-direction:column;align-items:flex-start}.bubbleWrap{max-width:88%}.chatLog{height:calc(100vh - 285px)}}
+
+/* ===== Minimal xKiro model picker ===== */
+.xModelBar{margin:0 0 6px}
+.xModelButton{width:100%;display:flex;align-items:center;gap:10px;text-align:left;border:1px solid #24456f;background:#081a34;color:#eef5ff;border-radius:12px;padding:9px 11px;min-height:49px}
+.xModelButton:hover{border-color:#4f78b8;background:#0a2040}
+.xModelIcon{width:29px;height:29px;border-radius:9px;display:grid;place-items:center;background:linear-gradient(135deg,#7354ff,#2e9dff);font-size:14px;flex:0 0 auto}
+.xModelButtonText{min-width:0;flex:1;display:block}
+.xModelButtonText small{display:block;font-size:8px;letter-spacing:.12em;color:#7892b7;line-height:1;margin-bottom:3px}
+.xModelButtonText b{display:block;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.xModelChevron{font-size:18px;color:#8ea6c9}
+.modelPicker{position:fixed;inset:0;background:#020711a8;backdrop-filter:blur(7px);z-index:1000;display:none;align-items:flex-end;justify-content:center;padding:12px}
+.modelPicker.show{display:flex}
+.modelPickerBox{width:min(620px,100%);max-height:min(76vh,650px);background:#07152c;border:1px solid #2a4b78;border-radius:18px;box-shadow:0 25px 80px #000b;overflow:hidden;display:flex;flex-direction:column}
+.modelPickerHead{display:flex;align-items:center;justify-content:space-between;padding:14px 15px 10px}
+.modelPickerHead small{color:#7790b6;font-size:8px;letter-spacing:.14em}
+.modelPickerHead h3{margin:3px 0 0;font-size:18px}
+.modelClose{width:34px;height:34px;border:1px solid #29476f;border-radius:10px;background:#0b1d39;color:#b8cae5}
+.modelSearchWrap{margin:0 13px 8px;border:1px solid #29476f;background:#051127;border-radius:11px;display:flex;align-items:center;padding:0 10px;color:#7790b6}
+.modelSearchWrap input{border:0;background:transparent;outline:0;color:#fff;width:100%;padding:11px 8px;font-size:13px}
+.modelPickerMeta{padding:0 15px 8px;color:#7188aa;font-size:10px}
+.modelList{overflow:auto;padding:0 10px 12px;display:grid;gap:6px}
+.modelOption{width:100%;border:1px solid #18365c;background:#091a34;color:#fff;border-radius:11px;padding:10px 11px;text-align:left;display:flex;align-items:center;gap:9px}
+.modelOption:hover{border-color:#4f78b8;background:#0c2141}
+.modelOption.active{border-color:#5b7fff;background:#10264a}
+.modelDot{width:8px;height:8px;border-radius:50%;background:#657da3;flex:0 0 auto}
+.modelOption.active .modelDot{background:#61a0ff;box-shadow:0 0 10px #61a0ff}
+.modelOptionMain{min-width:0;flex:1}
+.modelOptionName{font-weight:800;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.modelOptionSub{font-size:9px;color:#7890b1;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.modelTier{font-size:9px;color:#a8bde0;background:#10284b;border:1px solid #25466f;border-radius:99px;padding:3px 6px}
+body.model-open{overflow:hidden}
+@media(min-width:700px){.modelPicker{align-items:center}.modelPickerBox{max-height:70vh}}
+
+/* ===== Mobile-first compact composer ===== */
+.composer{
+  position:sticky;bottom:7px;z-index:20;
+  border:1px solid #23466f;background:rgba(5,18,38,.96);
+  border-radius:15px;padding:7px;box-shadow:0 14px 45px #000a;
+  backdrop-filter:blur(14px);
+}
+.composerTop{display:flex;align-items:center;gap:7px;min-height:32px;padding:0 1px 5px}
+.xModelButton{
+  width:auto;max-width:min(220px,72vw);min-height:31px;height:31px;
+  display:inline-flex;align-items:center;gap:6px;text-align:left;
+  border:1px solid #274a74;background:#0a1b35;color:#eef5ff;
+  border-radius:9px;padding:4px 7px;
+}
+.xModelButton:hover{border-color:#4f78b8;background:#0c2141}
+.xModelIcon{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;
+  background:linear-gradient(135deg,#7354ff,#2e9dff);font-size:11px;flex:0 0 auto}
+.xModelButtonText{min-width:0;display:block}
+.xModelButtonText small{display:block;font-size:6px;letter-spacing:.12em;color:#7892b7;line-height:1}
+.xModelButtonText b{display:block;font-size:10px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
+.xModelChevron{font-size:12px;color:#8ea6c9}
+.modelHint{font-size:8px;color:#617b9f}
+.composeRow{display:flex;gap:6px;align-items:center}
+.composeRow textarea{flex:1;min-width:0;min-height:40px;height:40px;max-height:110px;resize:none;background:#07162c;border:1px solid #1e3d62;border-radius:10px;outline:0;color:#fff;padding:10px;font-size:12px}
+.iconBtn{width:40px;height:40px;flex:0 0 40px;border:1px solid #28486d;border-radius:10px;background:#0a1d38;color:#bcd0e8}
+.sendBtn{width:42px;height:40px;flex:0 0 42px;border-radius:10px;font-size:16px}
+.dropHint{font-size:7px;color:#60799b;margin-top:4px;text-align:center}
+.attachPreview{padding:4px 4px 6px}
+.previewImg{width:38px;height:38px}
+.previewName{font-size:8px}
+.remove{padding:5px}
+.modelPicker{padding:9px}
+.modelPickerBox{width:min(420px,100%);max-height:62vh;border-radius:15px}
+.modelPickerHead{padding:11px 12px 7px}
+.modelPickerHead h3{font-size:15px}
+.modelSearchWrap{margin:0 10px 6px}
+.modelSearchWrap input{padding:9px 7px;font-size:12px}
+.modelPickerMeta{padding:0 12px 6px;font-size:9px}
+.modelList{padding:0 8px 9px;gap:5px}
+.modelOption{padding:8px 9px;border-radius:9px}
+.modelOptionName{font-size:11px}.modelOptionSub{font-size:8px}.modelTier{font-size:8px;padding:2px 5px}
+@media(max-width:720px){
+  main{padding:10px 10px 24px}
+  .chatView{margin-top:14px}
+  .chatHead h1{font-size:22px}
+  .chatLog{height:calc(100dvh - 280px);min-height:350px;padding-bottom:10px}
+  .composer{bottom:5px}
+  .bubble{font-size:12px;padding:11px 13px}
+  .msg{margin:12px 0;gap:7px}
+  .msgAvatar{width:27px;height:27px;flex-basis:27px;border-radius:8px;font-size:11px}
+  .bubbleWrap{max-width:90%}
+}
+
+
+/* ===== Room Nonton + Quiz Pilihan Ganda ===== */
+.roomView,.quizView{display:none;max-width:1180px;margin:27px auto 0}
+.roomHead,.quizHead{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin-bottom:14px}.roomHead h1,.quizHead h1{margin:0;font-size:25px}.roomHead p,.quizHead p{margin:5px 0 0;color:#8298b7;font-size:10px}
+.roomGrid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(280px,.6fr);gap:14px}.roomPanel,.roomCard,.quizPanel{border:1px solid #1d3c63;border-radius:15px;background:linear-gradient(145deg,#081c38,#06152b);padding:14px}
+.roomRow{display:flex;gap:8px}.roomInput,.quizInput{flex:1;min-width:0;border:1px solid #28486d;background:#06152b;color:#fff;border-radius:10px;padding:11px;outline:0}.roomBtn,.quizBtn{border:0;border-radius:10px;padding:10px 13px;background:linear-gradient(135deg,#39aaff,#6550ff);color:#fff;font-weight:800;font-size:10px;cursor:pointer}.roomBtn.secondary,.quizBtn.secondary{border:1px solid #29496e;background:#0a1c36;color:#bdd0e7}
+.roomStage{margin-top:12px;position:relative;background:#010713;border:1px solid #203e64;border-radius:12px;overflow:hidden;aspect-ratio:16/9}.roomStage iframe{width:100%;height:100%;border:0;display:block}.roomEmpty{height:100%;display:grid;place-items:center;text-align:center;color:#7188aa;padding:25px;font-size:11px}.roomStatus{margin-top:9px;font-size:9px;color:#7891b1}.roomStatus b{color:#48dcb2}
+.roomChat{height:320px;display:flex;flex-direction:column}.roomMessages{flex:1;overflow:auto;display:flex;flex-direction:column;gap:7px;padding:3px}.roomMsg{padding:8px 9px;background:#091d39;border:1px solid #193a5d;border-radius:10px;font-size:10px;color:#c9d8ea}.roomMsg b{color:#65c8ff}.roomMsg small{display:block;color:#617b9d;font-size:8px;margin-top:3px}.roomComposer{display:flex;gap:7px;margin-top:8px}.roomComposer input{flex:1;border:1px solid #28486d;background:#06152b;color:#fff;border-radius:10px;padding:10px;outline:0}.reactionBar{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.reaction{border:1px solid #28486d;background:#091b35;color:#d4e2f2;border-radius:99px;padding:7px 10px;cursor:pointer}.presenceList{display:flex;flex-wrap:wrap;gap:6px}.person{padding:6px 8px;border:1px solid #28486d;background:#091b35;border-radius:99px;font-size:9px;color:#bcd0e8}.roomCode{font-size:22px;letter-spacing:3px;font-weight:900;color:#65c8ff;margin:4px 0 12px}.roomHint{font-size:9px;color:#7188aa;line-height:1.5}.quizForm{display:grid;gap:10px}.quizForm textarea{width:100%;min-height:180px;resize:vertical;border:1px solid #28486d;background:#06152b;color:#fff;border-radius:10px;padding:11px;outline:0;font-size:11px}.quizOptions{display:grid;grid-template-columns:1fr 1fr;gap:7px}.quizOption{display:flex;gap:8px;align-items:flex-start;padding:10px;border:1px solid #28486d;background:#091b35;border-radius:10px;color:#c9d8ea;font-size:10px;cursor:pointer}.quizOption input{margin-top:2px}.quizQuestion{padding:13px;border:1px solid #203f64;border-radius:12px;background:#071a34;margin-bottom:10px}.quizQuestion h3{font-size:12px;margin:0 0 9px}.quizResult{padding:15px;border:1px solid #2a5b7a;border-radius:12px;background:#08233d;margin-top:12px;text-align:center}.quizScore{font-size:28px;font-weight:900;color:#65c8ff}.quizReview{margin-top:12px;text-align:left;display:grid;gap:7px}.quizReview div{padding:8px;border-radius:8px;background:#091b35;font-size:9px}.correct{border-left:3px solid #35d6a0}.wrong{border-left:3px solid #ff6b7a}
+@media(max-width:900px){.roomGrid{grid-template-columns:1fr}.quizOptions{grid-template-columns:1fr}}
+@media(max-width:720px){.roomView,.quizView{margin-top:14px}.roomHead,.quizHead{align-items:flex-start;flex-direction:column}.roomHead h1,.quizHead h1{font-size:22px}.roomRow,.roomComposer{flex-direction:column}.roomBtn,.quizBtn{width:100%}.roomPanel,.roomCard,.quizPanel{padding:11px}}
+
+/* ===== AI Nexus Watch Party ===== */
+.watchView{display:none;max-width:1180px;margin:27px auto 0}
+.watchHead{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin-bottom:14px}
+.watchHead h1{margin:0;font-size:25px}.watchHead p{margin:5px 0 0;color:#8298b7;font-size:10px}
+.watchGrid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(280px,.65fr);gap:14px}
+.watchPanel,.watchSideCard{border:1px solid #1d3c63;border-radius:15px;background:linear-gradient(145deg,#081c38,#06152b);padding:14px}
+.watchInputRow{display:flex;gap:7px}.watchInput{flex:1;min-width:0;border:1px solid #28486d;background:#06152b;color:#fff;border-radius:10px;padding:11px;outline:0}
+.watchBtn{border:0;border-radius:10px;padding:10px 13px;background:linear-gradient(135deg,#39aaff,#6550ff);color:#fff;font-weight:800;font-size:10px}
+.watchBtn.secondary{border:1px solid #29496e;background:#0a1c36;color:#bdd0e7}
+.playerWrap{margin-top:12px;position:relative;background:#010713;border:1px solid #203e64;border-radius:12px;overflow:hidden;aspect-ratio:16/9}
+.playerWrap iframe{width:100%;height:100%;border:0;display:block}.playerEmpty{height:100%;display:grid;place-items:center;text-align:center;color:#7188aa;padding:25px;font-size:11px}
+.watchControls{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.watchToggle{display:flex;align-items:center;gap:7px;border:1px solid #28486e;background:#091b35;color:#bfd1e8;border-radius:9px;padding:8px 10px;font-size:10px}
+.watchToggle input{accent-color:#5d7cff}
+.watchStatus{margin-top:9px;font-size:9px;color:#7891b1}.watchStatus b{color:#48dcb2}
+.hostBubble{display:flex;gap:9px;margin-top:12px;padding:11px;border:1px solid #27486e;border-radius:11px;background:#091d39}
+.hostAvatar{width:32px;height:32px;flex:0 0 32px;border-radius:9px;display:grid;place-items:center;background:linear-gradient(135deg,#6d5aff,#1caeff)}
+.hostBubble p{margin:0;color:#c9d8ea;font-size:10px;line-height:1.55}.watchSide{display:grid;gap:14px;align-content:start}
+.watchSideCard h3{font-size:13px;margin:0 0 10px}.watchSideCard textarea{width:100%;min-height:120px;resize:vertical;border:1px solid #28486d;background:#06152b;color:#fff;border-radius:10px;padding:10px;outline:0;font-size:11px}
+.watchActions{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.watchActions button{flex:1;min-width:110px}
+.activityLog{max-height:240px;overflow:auto;display:grid;gap:7px}.activityItem{padding:8px;border-bottom:1px solid #172f50;color:#9fb3cd;font-size:9px;line-height:1.45}.activityItem:last-child{border-bottom:0}.activityItem time{display:block;color:#637c9f;font-size:8px;margin-top:3px}
+.watchBadge{display:inline-block;border:1px solid #28547c;background:#0b2444;color:#83cfff;border-radius:99px;padding:4px 7px;font-size:8px;margin-bottom:7px}
+.analysisBox{margin-top:12px;border:1px solid #24476e;border-radius:11px;padding:11px;background:#06152b;display:none}.analysisBox.show{display:block}.analysisBox h4{margin:0 0 6px;font-size:11px}.analysisBox p{margin:0;color:#9fb2ca;font-size:10px;line-height:1.55}
+@media(max-width:900px){.watchGrid{grid-template-columns:1fr}.watchSide{grid-template-columns:1fr 1fr}.watchSideCard:first-child{grid-column:1/-1}}
+@media(max-width:720px){.watchView{margin-top:14px}.watchHead{align-items:flex-start;flex-direction:column}.watchHead h1{font-size:22px}.watchGrid{gap:10px}.watchPanel,.watchSideCard{padding:11px}.watchInputRow{flex-direction:column}.watchBtn{width:100%}.watchSide{display:grid;grid-template-columns:1fr}.watchSideCard:first-child{grid-column:auto}.playerWrap{aspect-ratio:16/10}.watchControls{display:grid;grid-template-columns:1fr 1fr}.watchToggle{min-height:38px}.watchActions{display:grid;grid-template-columns:1fr}.watchActions button{width:100%}}
+
+.quizSpinner{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:quizSpin .75s linear infinite;vertical-align:-2px}@keyframes quizSpin{to{transform:rotate(360deg)}}
+.quizGenerating{display:none;align-items:center;gap:9px;margin-top:10px;padding:10px 12px;border:1px solid #28486d;background:#091b35;border-radius:10px;color:#a9c2df;font-size:10px}
+.quizBtn:disabled{opacity:.7;cursor:wait}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar" id="sidebar">
+  <div class="brand"><div class="logo">N</div><div><b>AI Nexus</b><small>AI untuk belajar & produktivitas</small></div></div>
+  <nav class="nav" onclick="if(window.matchMedia('(max-width:720px)').matches) closeMenu()">
+    <button class="active" onclick="showHome()"><span class="ico">⌂</span>Beranda</button>
+    <button onclick="openChat('')"><span class="ico">◉</span>Chat AI</button>
+    <button onclick="openChatWith('Jelaskan materi berikut secara rinci, bertahap, dengan contoh sederhana, lalu buat rangkuman: ')"><span class="ico">▤</span>Belajar & Tutor</button>
+    <button onclick="openQuiz()"><span class="ico">?</span>Pembuat Soal</button>
+    <button onclick="openChatWith('Bantu saya membuat atau memperbaiki kode berikut. Jelaskan kesalahannya dan berikan kode yang sudah diperbaiki: ')"><span class="ico">&lt;/&gt;</span>Coding</button>
+    <button onclick="openChatWith('Analisis gambar ini secara detail. Jelaskan objek, teks, diagram, dan informasi penting yang terlihat: ')"><span class="ico">▧</span>Analisis Foto</button>
+    <button onclick="openLinkModal()"><span class="ico">↗</span>Belajar dari Link</button>
+     <button onclick="openRoomNonton()"><span class="ico">▶</span>Room Nonton</button>
+    <button onclick="openChatWith('Terjemahkan teks berikut dan jelaskan istilah pentingnya: ')"><span class="ico">文</span>Translator</button>
+    <button onclick="newChat()"><span class="ico">＋</span>Percakapan Baru</button>
+  </nav>
+  <div class="upgrade"><b>✦ AI Nexus Pro</b><p>Chat, Vision, Tutor, pembuat soal, riset web, coding, dan fitur produktivitas dalam satu tempat.</p><button onclick="toast('Semua fitur demo sudah tersedia di file ini.')">Lihat Fitur</button></div>
+  <div class="copy">AI Nexus Pro v2.0<br>© 2026 AI Nexus</div>
+</aside>
+
+<div class="drawerOverlay" id="drawerOverlay" onclick="closeMenu()"></div>
+<main>
+  <div class="mobilebar"><button onclick="toggleMenu()">☰</button><b>AI Nexus</b><button onclick="toast('Tema gelap aktif')">◐</button></div>
+  <header class="top">
+    <div class="search">⌕ <input id="globalSearch" placeholder="Cari fitur atau tanyakan apa saja..."><span class="kbd">Ctrl K</span></div>
+    <div class="topactions"><button class="round" onclick="toast('Tema gelap aktif')">☾</button><button class="round" onclick="toast('Tidak ada notifikasi baru')">♧</button><div class="profile"><div class="avatar">P</div><div><b style="font-size:10px">Pengguna</b><small>AI Nexus</small></div></div></div>
+  </header>
+
+  <section class="page" id="homeView">
+    <div class="lower">
+      <div>
+        <div class="hero">
+          <div class="eyebrow">👋 Selamat datang di AI Nexus Pro</div>
+          <h1>AI Cerdas untuk<br><span class="grad">Belajar & Berkarya</span></h1>
+          <p>Upload foto materi, minta penjelasan mendalam, buat soal latihan, pelajari halaman web, coding, terjemahan, dan banyak lagi.</p>
+          <div class="heroPrompt"><input id="heroInput" placeholder="Tanyakan apa saja kepada AI..."><button class="send" onclick="sendHero()">➜</button></div>
+          <div class="chips">
+            <button class="chip" onclick="quickPrompt('Jelaskan materi berikut dengan sangat rinci dan mudah dipahami: ')">📚 Jelaskan materi</button>
+            <button class="chip" onclick="quickPrompt('Buatkan 10 pertanyaan latihan dari materi berikut: ')">📝 Buat pertanyaan</button>
+            <button class="chip" onclick="openLinkModal()">🔗 Belajar dari link</button>
+            <button class="chip" onclick="triggerFile()">📷 Kirim foto</button>
+          </div>
+        </div>
+
+        <div class="sectionTitle"><h2>⭐ Fitur Unggulan</h2><p>Fitur yang dibuat agar AI lebih berguna untuk belajar dan pekerjaan sehari-hari.</p></div>
+        <div class="features">
+          <div class="card" onclick="openChat()"><div class="cardIcon">◉</div><span class="arrow">→</span><h3>Chat AI</h3><p>Diskusi bebas dengan AI dan pertahankan konteks percakapan.</p></div>
+          <div class="card" onclick="openChatWith('Jelaskan materi berikut secara rinci, dari dasar sampai tingkat lanjut. Gunakan analogi, contoh, poin penting, kesalahan umum, dan rangkuman akhir: ')"><div class="cardIcon">🎓</div><span class="arrow">→</span><h3>Tutor Pintar</h3><p>Penjelasan bertahap, contoh, analogi, dan rangkuman.</p></div>
+          <div class="card" onclick="openQuiz()"><div class="cardIcon">?</div><span class="arrow">→</span><h3>Pembuat Soal</h3><p>Ubah materi menjadi latihan dan kuis lengkap dengan kunci.</p></div>
+          <div class="card" onclick="openChatWith('Analisis gambar yang saya kirim. Jika ada materi, jelaskan isinya secara rinci dan mudah dipahami: ')"><div class="cardIcon">📷</div><span class="arrow">→</span><h3>Vision / Foto</h3><p>Kirim foto catatan, soal, diagram, atau gambar untuk dianalisis.</p></div>
+          <div class="card" onclick="openLinkModal()"><div class="cardIcon">🔗</div><span class="arrow">→</span><h3>Belajar dari Link</h3><p>Masukkan URL dan minta ringkasan atau pertanyaan dari halaman web.</p></div>
+          <div class="card" onclick="openRoomNonton()"><div class="cardIcon">▶️</div><span class="arrow">→</span><h3>Room Nonton</h3><p>Buat ruang nonton bersama, komentar realtime, peserta online, dan reaksi.</p></div>
+          <div class="card" onclick="openChatWith('Bantu saya membuat, menjelaskan, menguji, dan memperbaiki kode berikut: ')"><div class="cardIcon">&lt;/&gt;</div><span class="arrow">→</span><h3>Coding Assistant</h3><p>Debug, refactor, jelaskan kode, dan buat contoh implementasi.</p></div>
+          <div class="card" onclick="openChatWith('Terjemahkan teks berikut ke bahasa Indonesia dan jelaskan istilah sulitnya: ')"><div class="cardIcon">文</div><span class="arrow">→</span><h3>Translator</h3><p>Terjemahan dengan konteks dan penjelasan istilah penting.</p></div>
+        </div>
+
+        <div class="sectionTitle"><h2>🚀 Contoh Penggunaan</h2><p>Tekan salah satu untuk langsung mulai.</p></div>
+        <div class="examples">
+          <button class="example" onclick="quickPrompt('Jelaskan fotosintesis secara rinci untuk siswa SMP, gunakan analogi sederhana dan contoh sehari-hari.')">📚 Jelaskan fotosintesis secara rinci</button>
+          <button class="example" onclick="quickPrompt('Buatkan 15 soal pilihan ganda tentang materi berikut, lengkap dengan pembahasan jawaban: ')">📝 Buat 15 soal latihan</button>
+          <button class="example" onclick="quickPrompt('Bantu saya memahami kode berikut baris demi baris: ')">&lt;/&gt; Jelaskan kode baris demi baris</button>
+          <button class="example" onclick="openLinkModal()">🔗 Buat soal dari sebuah link</button>
+        </div>
+
+        <div class="cta"><div><b>✦ Siap belajar lebih cepat?</b><p>Kirim foto materi atau gunakan fitur Belajar dari Link.</p></div><button onclick="openChat()">Mulai Chat →</button></div>
+      </div>
+
+      <aside class="side">
+        <div class="sideCard"><h3>🔥 Mode AI</h3>
+          <div class="model"><div class="mi">🧠</div><div><b>Smart Chat</b><small>Jawaban umum & diskusi</small></div><span class="chev">›</span></div>
+          <div class="model"><div class="mi">🎓</div><div><b>Tutor Mendalam</b><small>Belajar langkah demi langkah</small></div><span class="chev">›</span></div>
+          <div class="model"><div class="mi">📷</div><div><b>Vision</b><small>Analisis foto & materi</small></div><span class="chev">›</span></div>
+          <div class="model"><div class="mi">🌐</div><div><b>Web Research</b><small>Riset informasi dari web</small></div><span class="chev">›</span></div>
+        </div>
+        <div class="sideCard"><h3>💡 Tips</h3><p class="tip">Untuk belajar lebih efektif, kirim materi lalu minta: “jelaskan dari dasar”, “beri contoh”, “buat soal”, dan “uji saya tanpa memberikan jawaban dulu”.</p></div>
+        <div class="sideCard"><h3>◷ Riwayat</h3><div id="history" class="history"><div class="historyRow"><i>◉</i><span>Belum ada percakapan<small>Mulai chat pertama</small></span></div></div></div>
+      </aside>
+    </div>
+  </section>
+
+
+  <section id="roomView" class="roomView">
+    <div class="roomHead"><div><h1>🎬 Room Nonton</h1><p>Buat ruang nonton bersama. Komentar dan reaksi hanya tampil di Room yang sedang diikuti.</p></div><button class="roomBtn secondary" onclick="showHome()">← Kembali</button></div>
+    <div id="roomLobby" class="roomGrid">
+      <div class="roomPanel"><span class="watchBadge">ROOM NONTON • REALTIME</span><h2 style="font-size:18px;margin:5px 0">Buat atau gabung Room</h2><p class="roomHint">Masukkan nama panggilan. Tidak perlu email atau password. Siapa pun yang memiliki kode Room dapat bergabung.</p><input id="roomNickname" class="roomInput" style="width:100%;margin:9px 0" placeholder="Nama panggilan">
+        <div class="roomRow"><button class="roomBtn" onclick="createRoom()">＋ Buat Room Baru</button><input id="joinRoomCode" class="roomInput" placeholder="Kode Room"><button class="roomBtn secondary" onclick="joinRoom()">Gabung</button></div>
+        <p id="roomSetupHint" class="roomHint" style="margin-top:12px">Supabase belum dikonfigurasi di halaman ini.</p>
+      </div>
+      <div class="roomCard"><h3 style="font-size:13px;margin:0 0 8px">🚪 Akses Room</h3><p class="roomHint">Tidak ada password. Bagikan kode Room kepada orang yang ingin ikut. Komentar tetap dipisahkan berdasarkan Room.</p></div>
+    </div>
+    <div id="roomActive" style="display:none">
+      <div class="roomGrid">
+        <div class="roomPanel"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><div><span class="watchBadge">SEDANG DI ROOM</span><div id="roomCodeDisplay" class="roomCode"></div></div><button class="roomBtn secondary" onclick="leaveRoom()">Keluar Room</button></div>
+          <div class="roomRow"><input id="roomVideoUrl" class="roomInput" placeholder="Tempel link YouTube"><button class="roomBtn" onclick="setRoomVideo()">Putar Video</button></div>
+          <div id="roomStage" class="roomStage"><div class="roomEmpty">Masukkan link YouTube untuk memulai video di Room.</div></div>
+          <div id="roomStatus" class="roomStatus">Status: <b>Terhubung</b></div>
+        </div>
+        <div class="roomCard roomChat"><h3 style="font-size:13px;margin:0 0 8px">💬 Komentar Room</h3><div id="roomMessages" class="roomMessages"></div><div class="roomComposer"><input id="roomMessageInput" placeholder="Tulis komentar…"><button class="roomBtn" onclick="sendRoomMessage()">Kirim</button></div><div class="reactionBar"><button class="reaction" onclick="sendReaction('❤️')">❤️ <span id="rxHeart">0</span></button><button class="reaction" onclick="sendReaction('😂')">😂 <span id="rxLaugh">0</span></button><button class="reaction" onclick="sendReaction('😮')">😮 <span id="rxWow">0</span></button><button class="reaction" onclick="sendReaction('👍')">👍 <span id="rxLike">0</span></button></div></div>
+      </div>
+      <div class="roomCard" style="margin-top:14px"><h3 style="font-size:13px;margin:0 0 9px">👥 Peserta Online <span id="roomCount" style="color:#65c8ff">0</span></h3><div id="presenceList" class="presenceList"></div></div>
+    </div>
+  </section>
+
+  <section id="quizView" class="quizView">
+    <div class="quizHead"><div><h1>📝 Pembuat Soal Pilihan Ganda</h1><p>Buat kuis dari materi, jawab pilihan yang tersedia, lalu lihat skor akhir.</p></div><button class="quizBtn secondary" onclick="showHome()">← Kembali</button></div>
+    <div id="quizBuilder" class="quizPanel"><div id="quizGenerating" class="quizGenerating"></div><div class="quizForm"><textarea id="quizMaterial" placeholder="Tempel materi di sini…"></textarea><div class="roomRow"><select id="quizCount" class="quizInput"><option value="5">5 soal</option><option value="10" selected>10 soal</option><option value="15">15 soal</option><option value="20">20 soal</option></select><select id="quizDifficulty" class="quizInput"><option>Mudah</option><option selected>Sedang</option><option>Sulit</option></select><button class="quizBtn" onclick="generateQuiz()">✨ Buat Soal</button></div></div></div>
+    <div id="quizArea" style="display:none;margin-top:14px" class="quizPanel"><div id="quizQuestions"></div><button class="quizBtn" onclick="submitQuiz()">✅ Selesai & Lihat Nilai</button><div id="quizResult"></div></div>
+  </section>
+
+  <section id="chatView" class="chatView">
+    <div class="chatHead">
+      <div><h1>Chat AI</h1><p id="modeDescription">Smart Chat • xKiro</p></div>
+      <div class="chatTools"><button class="toolBtn" onclick="openLinkModal()">🔗 Link</button><button class="toolBtn" onclick="triggerFile()">📷 Foto</button><button class="toolBtn" onclick="newChat()">＋ Baru</button></div>
+    </div>
+    <div class="modeBar">
+      <button class="mode active" data-mode="chat" onclick="setMode('chat')">🧠 Smart</button>
+      <button class="mode" data-mode="tutor" onclick="setMode('tutor')">🎓 Tutor</button>
+      <button class="mode" data-mode="quiz" onclick="openQuiz()">📝 Pembuat Soal</button>
+      <button class="mode" data-mode="research" onclick="setMode('research')">🌐 Riset Web</button>
+      <button class="mode" data-mode="coding" onclick="setMode('coding')">&lt;/&gt; Coding</button>
+    </div>
+    <div id="chatLog" class="chatLog"><div class="msg"><div class="msgAvatar">N</div><div class="bubbleWrap"><div class="bubble">Halo! 👋 Saya AI Nexus Pro.<br><br>Saya bisa membantu menjelaskan materi secara rinci, menganalisis foto, membuat soal latihan, mempelajari link, coding, dan banyak lagi.</div><div class="messageActions"><button onclick="copyText(this)">Salin</button></div></div></div></div>
+    <div class="composer">
+      <div id="attachPreview" class="attachPreview"><img id="previewImg" class="previewImg"><span id="previewName" class="previewName"></span><button class="remove" onclick="removeImage()">✕</button></div>
+      <div class="composerTop">
+        <button id="xkiroModelButton" class="xModelButton" type="button" onclick="openModelPicker()" aria-label="Ganti model">
+          <span class="xModelIcon">✦</span>
+          <span class="xModelButtonText">
+            <small>MODEL</small>
+            <b id="xkiroModelLabel">Memuat model…</b>
+          </span>
+          <span class="xModelChevron">⌄</span>
+        </button>
+        <span class="modelHint">Ketuk untuk ganti</span>
+      </div>
+      <div class="composeRow">
+        <button class="iconBtn" title="Kirim foto" onclick="triggerFile()">＋</button>
+        <textarea id="chatInput" rows="1" placeholder="Tulis pesan…"></textarea>
+        <button class="sendBtn" onclick="sendMessage()" aria-label="Kirim">➜</button>
+      </div>
+      <div class="dropHint">Tempel gambar langsung ke chat jika diperlukan.</div>
+    </div>
+    <input id="fileInput" class="fileInput" type="file" accept="image/*">
+  </section>
+</main>
+</div>
+
+
+<div id="modelPicker" class="modelPicker" aria-hidden="true">
+  <div class="modelPickerBox">
+    <div class="modelPickerHead">
+      <div>
+        <small>MODEL AI</small>
+        <h3>Pilih model</h3>
+      </div>
+      <button class="modelClose" onclick="closeModelPicker()" type="button">✕</button>
+    </div>
+    <div class="modelSearchWrap">
+      <span>⌕</span>
+      <input id="modelSearch" type="search" placeholder="Cari model, misalnya GLM, GPT, Claude…" autocomplete="off">
+    </div>
+    <div id="modelPickerMeta" class="modelPickerMeta">Memuat model xKiro…</div>
+    <div id="modelList" class="modelList"></div>
+  </div>
+</div>
+<div id="linkModal" class="modal">
+  <div class="modalBox">
+    <h2>🔗 Belajar dari Link</h2>
+    <p>Masukkan URL halaman yang ingin dipelajari. AI Nexus akan menggunakan web search untuk mencari dan memahami informasi yang relevan dari URL tersebut, lalu membuat ringkasan, penjelasan, atau soal sesuai permintaan.</p>
+    <input id="urlInput" type="url" placeholder="https://contoh.com/materi">
+    <textarea id="urlTask" rows="5" style="margin-top:9px" placeholder="Contoh: Ringkas materi ini lalu buat 15 pertanyaan latihan tanpa jawaban."></textarea>
+    <div class="modalActions"><button class="secondary" onclick="closeLinkModal()">Batal</button><button class="primary" onclick="studyLink()">Pelajari Link →</button></div>
+  </div>
+</div>
+<div id="toast" class="toast"></div>
+
+<script>
+/* ============================================================
+   AI NEXUS PRO — SATU FILE
+   GANTI API KEY DI BARIS DI BAWAH.
+   ============================================================ */
+const XKIRO_API_KEY = "";
+const XKIRO_BASE = "https://api.xkiro.com/v1";
+const XKIRO_DEFAULT_MODEL = "openai/gpt-5.6-sol";
+
+/* Jika model yang kamu pilih tidak tersedia di API account kamu,
+   ganti OPENAI_MODEL dengan model OpenAI yang tersedia. */
+
+const state = {
+  session: localStorage.getItem("nexus_session") || crypto.randomUUID(),
+  history: JSON.parse(localStorage.getItem("nexus_history") || "[]"),
+  imageData: null,
+  imageName: "",
+  mode: "chat"
+};
+localStorage.setItem("nexus_session", state.session);
+
+const $ = id => document.getElementById(id);
+const chatLog = $("chatLog"), chatInput = $("chatInput");
+
+function toast(text){
+  const t=$("toast"); t.textContent=text; t.classList.add("show");
+  clearTimeout(window.__toast); window.__toast=setTimeout(()=>t.classList.remove("show"),2400);
+}
+function toggleMenu(){ const open=$("sidebar").classList.toggle("open"); $("drawerOverlay").classList.toggle("show",open); document.body.style.overflow=open?"hidden":""; }
+function closeMenu(){ $("sidebar").classList.remove("open"); $("drawerOverlay").classList.remove("show"); document.body.style.overflow=""; }
+function setViewDisplay(id, display){ const el=$(id); if(el) el.style.display=display; }
+function showHome(){ closeMenu(); setViewDisplay("homeView","block"); setViewDisplay("chatView","none"); setViewDisplay("watchView","none"); setViewDisplay("roomView","none"); setViewDisplay("quizView","none"); }
+function openChat(prefill=""){ closeMenu();
+  setViewDisplay("homeView","none"); setViewDisplay("chatView","block"); setViewDisplay("watchView","none"); setViewDisplay("roomView","none"); setViewDisplay("quizView","none");
+  if(prefill){chatInput.value=prefill;chatInput.focus()}
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function openChatWith(text){openChat(text)}
+function quickPrompt(text){openChat(text)}
+function sendHero(){const t=$("heroInput").value.trim();if(!t)return;openChat(t);sendMessage()}
+function triggerFile(){$("fileInput").click()}
+function newChat(){ closeMenu();
+  state.session=crypto.randomUUID();state.imageData=null;state.imageName="";
+  localStorage.setItem("nexus_session",state.session);removeImage();
+  chatLog.innerHTML='<div class="msg"><div class="msgAvatar">N</div><div class="bubbleWrap"><div class="bubble">Percakapan baru dimulai. 👋</div></div></div>';
+}
+function setMode(mode){
+  state.mode=mode;
+  document.querySelectorAll(".mode").forEach(x=>x.classList.toggle("active",x.dataset.mode===mode));
+  const desc={chat:"Smart Chat • xKiro",tutor:"Tutor Mendalam • penjelasan bertahap",quiz:"Pembuat Soal • latihan & evaluasi",research:"Riset Web • informasi terbaru",coding:"Coding Assistant • debug & penjelasan kode"};
+  $("modeDescription").textContent=desc[mode];
+  toast("Mode: "+desc[mode].split(" • ")[0]);
+}
+function modeInstruction(){
+  const common=" Jawab dalam bahasa Indonesia. Jika materi sulit, pecah menjadi bagian kecil. Jangan mengarang fakta. ";
+  if(state.mode==="tutor") return common+"Bertindak sebagai tutor: mulai dari konsep dasar, jelaskan istilah, gunakan analogi dan contoh, berikan langkah berpikir yang dapat dipelajari tanpa membocorkan proses internal, lalu rangkum dan berikan latihan singkat.";
+  if(state.mode==="quiz") return common+"Bertindak sebagai guru pembuat soal. Buat soal sesuai materi, variasikan tingkat kesulitan, sertakan kunci jawaban dan pembahasan setelah semua soal. Jika diminta menguji pengguna, jangan berikan jawaban sebelum pengguna menjawab.";
+  if(state.mode==="research") return common+"Gunakan web search bila informasi membutuhkan sumber/current facts. Bedakan fakta dari pendapat dan sertakan sumber/link bila tersedia.";
+  if(state.mode==="coding") return common+"Bertindak sebagai coding assistant. Berikan kode lengkap yang relevan, jelaskan bug, penyebab, dan cara memperbaikinya. Jangan menghapus bagian penting tanpa alasan.";
+  return common+"Bersikap ramah, jelas, terstruktur, dan langsung membantu.";
+}
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function markdown(s){
+  let x=escapeHTML(s);
+  x=x.replace(/```([\s\S]*?)```/g,(_,c)=>"<pre><code>"+c.trim()+"</code></pre>");
+  x=x.replace(/`([^`]+)`/g,"<code>$1</code>");
+  x=x.replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>");
+  x=x.replace(/^\s*[-•]\s+(.+)$/gm,"<li>$1</li>");
+  x=x.replace(/(<li>.*<\/li>)/gs,"<ul>$1</ul>");
+  x=x.replace(/\n\n/g,"</p><p>").replace(/\n/g,"<br>");
+  return "<p>"+x+"</p>";
+}
+function addMessage(text, user=false, imageSrc=null){
+  const row=document.createElement("div");row.className="msg"+(user?" user":"");
+  const av=document.createElement("div");av.className="msgAvatar";av.textContent=user?"P":"N";
+  const wrap=document.createElement("div");wrap.className="bubbleWrap";
+  const b=document.createElement("div");b.className="bubble";
+  if(user && imageSrc){
+    const a=document.createElement("div");a.className="attachment";
+    a.innerHTML='<img src="'+imageSrc+'"><span>Gambar dikirim bersama pesan</span>';b.appendChild(a);
+    if(text){const p=document.createElement("p");p.style.marginTop="8px";p.textContent=text;b.appendChild(p)}
+  }else if(!user){b.innerHTML=markdown(text)}else{b.textContent=text}
+  wrap.appendChild(b);
+  if(!user){
+    const actions=document.createElement("div");actions.className="messageActions";
+    actions.innerHTML='<button onclick="copyText(this)">Salin</button><button onclick="regenerate(this)">Regenerasi</button>';
+    wrap.appendChild(actions);
+  }
+  row.appendChild(av);row.appendChild(wrap);chatLog.appendChild(row);chatLog.scrollTop=chatLog.scrollHeight;
+}
+function addLoading(){
+  const row=document.createElement("div");row.id="loading";row.className="msg";
+  row.innerHTML='<div class="msgAvatar">N</div><div class="bubbleWrap"><div class="bubble"><span class="loading"><i></i><i></i><i></i></span></div></div>';
+  chatLog.appendChild(row);chatLog.scrollTop=chatLog.scrollHeight;
+}
+async function copyText(btn){
+  const bubble=btn.closest(".bubbleWrap").querySelector(".bubble");
+  try{await navigator.clipboard.writeText(bubble.innerText);toast("Jawaban disalin")}
+  catch{toast("Gagal menyalin")}
+}
+function regenerate(btn){
+  const rows=[...chatLog.querySelectorAll(".msg.user")];
+  if(!rows.length)return;
+  const last=rows[rows.length-1].querySelector(".bubble")?.innerText||"";
+  chatInput.value=last;sendMessage(true);
+}
+
+function resizeImage(file){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onerror=reject;
+    reader.onload=()=>{
+      const img=new Image();
+      img.onload=()=>{
+        const max=1600,scale=Math.min(1,max/Math.max(img.width,img.height));
+        const c=document.createElement("canvas");c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);
+        c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+        resolve(c.toDataURL("image/jpeg",.84));
+      };
+      img.onerror=reject;img.src=reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+async function handleFile(file){
+  if(!file || !file.type.startsWith("image/"))return;
+  if(file.size>12*1024*1024){toast("Gambar terlalu besar. Maksimal 12 MB.");return}
+  try{
+    state.imageData=await resizeImage(file);state.imageName=file.name;
+    $("previewImg").src=state.imageData;$("previewName").textContent=file.name;$("attachPreview").classList.add("show");
+    toast("Foto siap dikirim");
+  }catch{toast("Gagal membaca gambar")}
+}
+$("fileInput").addEventListener("change",e=>handleFile(e.target.files[0]));
+document.addEventListener("paste",e=>{
+  const item=[...(e.clipboardData?.items||[])].find(x=>x.type.startsWith("image/"));
+  if(item){handleFile(item.getAsFile());e.preventDefault()}
+});
+function removeImage(){
+  state.imageData=null;state.imageName="";$("attachPreview").classList.remove("show");$("fileInput").value="";
+}
+
+async function sendMessage(skipEmpty=false){
+  const text=chatInput.value.trim();
+  const image=state.imageData;
+  if(!text && !image && !skipEmpty)return;
+
+  const shown=text || "Tolong analisis gambar ini.";
+  const sentImage=image;
+  const model=xkiroSelectedModel || "openai/gpt-5.6-sol";
+
+  addMessage(shown,true,image);
+  chatInput.value="";
+  removeImage();
+  addLoading();
+
+  state.history.push(shown);
+  state.history=state.history.slice(-15);
+  localStorage.setItem("nexus_history",JSON.stringify(state.history));
+  renderHistory();
+  const userContent=[];
+  if(text) userContent.push({type:"text",text:text});
+  if(sentImage) userContent.push({type:"image_url",image_url:{url:sentImage}});
+
+  const messages=[
+    {role:"system",content:modeInstruction()},
+    {role:"user",content:userContent.length===1 && userContent[0].type==="text" ? userContent[0].text : userContent}
+  ];
+
+  try{
+    const r=await fetch(XKIRO_ENDPOINT+"/chat/completions",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+      },
+      body:JSON.stringify({model, messages, stream:false})
+    });
+    let data=null;
+    try{data=await r.json()}catch{}
+    $("loading")?.remove();
+    if(!r.ok)throw new Error(data?.error?.message||data?.message||"xKiro mengembalikan error.");
+    const answer=data?.choices?.[0]?.message?.content;
+    addMessage(answer||"Tidak ada teks jawaban dari model.");
+  }catch(err){
+    $("loading")?.remove();
+    addMessage("⚠️ Gagal menghubungi xKiro.\n\n"+err.message);
+  }
+}
+
+function extractOutput(data){
+  try{return (data.output||[]).flatMap(x=>x.content||[]).filter(x=>x.type==="output_text").map(x=>x.text).join("\n")}catch{return ""}
+}
+
+function renderHistory(){
+  const box=$("history");if(!state.history.length)return;
+  box.innerHTML="";
+  state.history.slice(-5).reverse().forEach(t=>{
+    const d=document.createElement("div");d.className="historyRow";
+    const i=document.createElement("i");i.textContent="◉";const s=document.createElement("span");s.textContent=t.slice(0,48);
+    const sm=document.createElement("small");sm.textContent="Baru saja";s.appendChild(sm);d.appendChild(i);d.appendChild(s);box.appendChild(d);
+  });
+}
+function openLinkModal(){$("linkModal").classList.add("show");$("urlInput").focus()}
+function closeLinkModal(){$("linkModal").classList.remove("show")}
+async function studyLink(){
+  const url=$("urlInput").value.trim(),task=$("urlTask").value.trim()||"Ringkas halaman ini lalu jelaskan poin pentingnya dan buat 10 pertanyaan latihan dari materi tersebut.";
+  if(!/^https?:\/\/\S+/i.test(url)){toast("Masukkan URL yang valid, misalnya https://contoh.com");return}
+  closeLinkModal();setMode("research");openChat();
+  const prompt="Pelajari halaman web berikut menggunakan web search: "+url+"\n\nTugas pengguna: "+task+
+    "\n\nPenting: gunakan URL tersebut sebagai sumber utama bila dapat diakses. Jika halaman tidak dapat diakses, katakan dengan jelas dan jangan mengarang isi halaman.";
+  chatInput.value=prompt;sendMessage();
+}
+
+$("chatInput").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage()}});
+$("heroInput").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();sendHero()}});
+$("globalSearch").addEventListener("keydown",e=>{if(e.key==="Enter"){const q=e.target.value.trim();if(q){openChat(q);chatInput.value=q;sendMessage()}}});
+document.addEventListener("keydown",e=>{
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){e.preventDefault();$("globalSearch").focus()}
+  if(e.key==="Escape")closeLinkModal();
+});
+renderHistory();
+$("roomMessageInput")?.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();sendRoomMessage()}});
+</script>
+
+<script>
+
+/* ===== Room Nonton + Quiz Pilihan Ganda ===== */
+const SUPABASE_URL="PASTE_SUPABASE_URL_DI_SINI";
+const SUPABASE_PUBLISHABLE_KEY="PASTE_SUPABASE_PUBLISHABLE_KEY_DI_SINI";
+let supabaseClient=null, roomChannel=null, currentRoom=null, roomUser=null, quizData=[];
+function openRoomNonton(){closeMenu();setViewDisplay("homeView","none");setViewDisplay("chatView","none");setViewDisplay("watchView","none");setViewDisplay("quizView","none");setViewDisplay("roomView","block");window.scrollTo({top:0,behavior:"smooth"});initRoomSupabase()}
+function openQuiz(){closeMenu();setViewDisplay("homeView","none");setViewDisplay("chatView","none");setViewDisplay("watchView","none");setViewDisplay("roomView","none");setViewDisplay("quizView","block");window.scrollTo({top:0,behavior:"smooth"})}
+async function initRoomSupabase(){
+  if(!window.supabase){$("roomSetupHint").textContent="Library Supabase belum termuat. Refresh halaman.";return false}
+  if(SUPABASE_URL.includes("PASTE_")){ $("roomSetupHint").textContent="Masukkan SUPABASE_URL dan SUPABASE_PUBLISHABLE_KEY setelah project Supabase dibuat.";return false }
+  if(!supabaseClient)supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY)
+  const {data:{session}}=await supabaseClient.auth.getSession();
+  if(!session){const {data,error}=await supabaseClient.auth.signInAnonymously({options:{data:{display_name:"Pengguna"}}});if(error){toast("Gagal membuat sesi: "+error.message);return false}roomUser=(await supabaseClient.auth.getUser()).data.user}else roomUser=session.user;
+  $("roomSetupHint").textContent="Supabase siap. Buat Room atau masukkan kode Room.";return true
+}
+function randomRoomCode(){return Math.random().toString(36).slice(2,8).toUpperCase()}
+function getNickname(){return ($("roomNickname").value.trim()||"Pengguna").slice(0,24)}
+async function createRoom(){
+  if(!await initRoomSupabase())return;
+  const nick=getNickname();
+  const code=randomRoomCode();
+  const {data,error}=await supabaseClient.rpc("create_watch_room",{p_code:code,p_nickname:nick});
+  if(error){toast("Gagal membuat Room: "+error.message);$("roomSetupHint").textContent="Gagal membuat Room: "+error.message;return}
+  const room=Array.isArray(data)?data[0]:data;
+  if(!room?.id){toast("Room gagal dibuat. Coba lagi.");return}
+  enterRoom(room,nick);
+}
+async function joinRoom(){
+  if(!await initRoomSupabase())return;
+  const code=$("joinRoomCode").value.trim().toUpperCase();
+  if(!code){toast("Masukkan kode Room.");return}
+  const nick=getNickname();
+  const {data,error}=await supabaseClient.rpc("join_watch_room",{p_code:code,p_nickname:nick});
+  if(error){toast("Gagal masuk Room: "+error.message);return}
+  const room=Array.isArray(data)?data[0]:data;
+  if(!room?.id){toast("Room tidak ditemukan atau sudah ditutup.");return}
+  enterRoom(room,nick);
+}
+async function enterRoom(room,nick){currentRoom=room;$("roomLobby").style.display="none";$("roomActive").style.display="block";$("roomCodeDisplay").textContent=room.code;$("roomMessages").innerHTML="";if(room.video_url)renderRoomVideo(room.video_url);else $("roomStage").innerHTML='<div class="roomEmpty">Host belum memilih video.</div>';await loadRoomMessages();await setupRoomRealtime(nick)}
+async function loadRoomMessages(){if(!currentRoom)return;const {data}=await supabaseClient.from("room_messages").select("*").eq("room_id",currentRoom.id).order("created_at",{ascending:true}).limit(100);(data||[]).forEach(addRoomMessage)}
+function addRoomMessage(m){const box=$("roomMessages");const d=document.createElement("div");d.className="roomMsg";d.innerHTML="<b>"+escapeHTML(m.nickname)+"</b>: "+escapeHTML(m.message)+"<small>"+new Date(m.created_at).toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit"})+"</small>";box.appendChild(d);box.scrollTop=box.scrollHeight}
+async function setupRoomRealtime(nick){
+  if(roomChannel)await supabaseClient.removeChannel(roomChannel);
+  roomChannel=supabaseClient.channel("room:"+currentRoom.id,{config:{presence:{key:roomUser.id}}});
+  roomChannel
+    .on("postgres_changes",{event:"INSERT",schema:"public",table:"room_messages",filter:"room_id=eq."+currentRoom.id},p=>addRoomMessage(p.new))
+    .on("postgres_changes",{event:"UPDATE",schema:"public",table:"rooms",filter:"id=eq."+currentRoom.id},p=>{currentRoom=p.new;if(p.new.video_url)renderRoomVideo(p.new.video_url)})
+    .on("broadcast",{event:"reaction"},p=>updateReaction(p.payload.reaction))
+    .on("presence",{event:"sync"},()=>renderPresence(roomChannel.presenceState()))
+    .subscribe(async status=>{
+      if(status==="SUBSCRIBED"){
+        await roomChannel.track({nickname:nick});
+        $("roomStatus").innerHTML="Status: <b>● Realtime terhubung</b>";
+      }else if(status==="CHANNEL_ERROR"||status==="TIMED_OUT"){
+        $("roomStatus").innerHTML="Status: <b style=\"color:#ff6b7a\">Realtime gagal tersambung</b>";
+        toast("Realtime Room gagal tersambung. Cek Realtime Supabase.");
+      }
+    });
+}
+function renderPresence(state){const box=$("presenceList");box.innerHTML="";let count=0;Object.values(state||{}).flat().forEach(x=>{count++;const d=document.createElement("span");d.className="person";d.textContent="● "+(x.nickname||"Pengguna");box.appendChild(d)});$("roomCount").textContent=count}
+async function sendRoomMessage(){
+  if(!currentRoom)return;
+  const input=$("roomMessageInput"),msg=input.value.trim();
+  if(!msg)return;
+  const {data,error}=await supabaseClient.from("room_messages")
+    .insert({room_id:currentRoom.id,user_id:roomUser.id,nickname:getNickname(),message:msg})
+    .select("*").single();
+  if(error){
+    toast("Komentar gagal dikirim: "+error.message);
+    return;
+  }
+  input.value="";
+  if(data)addRoomMessage(data);
+}
+async function sendReaction(reaction){if(!roomChannel)return;await roomChannel.send({type:"broadcast",event:"reaction",payload:{reaction}});updateReaction(reaction)}
+function updateReaction(r){const map={"❤️":"rxHeart","😂":"rxLaugh","😮":"rxWow","👍":"rxLike"};const el=$(map[r]);if(el)el.textContent=String(Number(el.textContent||0)+1)}
+function youtubeIdRoom(url){try{const u=new URL(url);if(u.hostname.includes("youtu.be"))return u.pathname.slice(1).split("/")[0];if(u.searchParams.get("v"))return u.searchParams.get("v");const m=u.pathname.match(/\/(?:embed|shorts|live)\/([^/?]+)/);return m?m[1]:""}catch{return ""}}
+async function setRoomVideo(){if(!currentRoom)return;const id=youtubeIdRoom($("roomVideoUrl").value.trim());if(!id){toast("Link YouTube tidak valid.");return}const url="https://www.youtube.com/embed/"+encodeURIComponent(id)+"?playsinline=1&rel=0";const {data,error}=await supabaseClient.from("rooms").update({video_url:url}).eq("id",currentRoom.id).eq("host_id",roomUser.id).select("id,video_url").maybeSingle();if(error){toast("Gagal mengganti video: "+error.message);return}if(!data){toast("Hanya host yang dapat mengganti video.");return}currentRoom.video_url=data.video_url;renderRoomVideo(data.video_url)}
+function renderRoomVideo(url){$("roomStage").innerHTML='<iframe src="'+escapeHTML(url)+'" title="Room Nonton" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>'}
+async function leaveRoom(){if(roomChannel){await roomChannel.untrack();await supabaseClient.removeChannel(roomChannel);roomChannel=null}currentRoom=null;$("roomActive").style.display="none";$("roomLobby").style.display="grid"}
+async function generateQuiz(){
+  const material=$("quizMaterial").value.trim();
+  if(!material){toast("Masukkan materi terlebih dahulu.");return}
+  const count=Number($("quizCount").value),difficulty=$("quizDifficulty").value;
+  const model=xkiroSelectedModel||XKIRO_DEFAULT_MODEL;
+  const btn=document.querySelector('#quizBuilder .quizBtn');
+  const original=btn?btn.innerHTML:"✨ Buat Soal";
+  if(btn){btn.disabled=true;btn.innerHTML='<span class="quizSpinner"></span> Sedang membuat soal…';}
+  const status=$("quizGenerating");
+  if(status){status.style.display="flex";status.innerHTML='<span class="quizSpinner"></span><span>AI sedang membuat '+count+' soal. Jangan tutup halaman…</span>';}
+  try{
+    const prompt=`Buat tepat ${count} soal pilihan ganda dari materi berikut. Tingkat kesulitan: ${difficulty}. Kembalikan HANYA JSON valid dengan bentuk {"questions":[{"question":"...","options":["...","...","...","..."],"answer":0,"explanation":"..."}]}. answer adalah index 0-3. Setiap soal harus punya tepat 4 pilihan dan hanya 1 jawaban benar. Jangan menambahkan markdown. Materi:\n${material}`;
+    const r=await fetch(XKIRO_ENDPOINT+"/chat/completions",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model,messages:[{role:"system",content:"Kamu adalah generator kuis. Ikuti format JSON dengan ketat."},{role:"user",content:prompt}],stream:false})});
+    let d={};try{d=await r.json()}catch{}
+    if(!r.ok)throw new Error(d?.error?.message||"API error");
+    let raw=d?.choices?.[0]?.message?.content||"";
+    raw=raw.replace(/^```json\s*/i,"").replace(/```$/i,"").trim();
+    const parsed=JSON.parse(raw);quizData=Array.isArray(parsed.questions)?parsed.questions:[];
+    if(quizData.length!==count)throw new Error("AI mengembalikan "+quizData.length+" soal, seharusnya "+count+".");
+    quizData.forEach((q,i)=>{if(!q||typeof q.question!=="string"||!Array.isArray(q.options)||q.options.length!==4||!Number.isInteger(Number(q.answer))||Number(q.answer)<0||Number(q.answer)>3)throw new Error("Format soal nomor "+(i+1)+" tidak valid.");q.answer=Number(q.answer)});
+    renderQuiz();
+  }catch(e){toast("Gagal membuat soal: "+e.message);if(status)status.innerHTML='<span>⚠️ Pembuatan soal gagal. Silakan coba lagi.</span>'}
+  finally{if(btn){btn.disabled=false;btn.innerHTML=original;}if(status&&!quizData.length)status.style.display="none";}
+}
+function renderQuiz(){
+  $("quizBuilder").style.display="none";
+  $("quizArea").style.display="block";
+  const box=$("quizQuestions");box.innerHTML="";
+  quizData.forEach((q,i)=>{
+    const d=document.createElement("div");d.className="quizQuestion";
+    d.innerHTML="<h3>"+(i+1)+". "+escapeHTML(q.question)+"</h3><div class=\"quizOptions\">"+
+      q.options.map((o,j)=>'<label class="quizOption"><input type="radio" name="q'+i+'" value="'+j+'"> '+escapeHTML(o)+'</label>').join("")+"</div>";
+    box.appendChild(d);
+  });
+}
+function submitQuiz(){
+  let score=0,answered=0,wrong=0,review=[];
+  quizData.forEach((q,i)=>{
+    const el=document.querySelector('input[name="q'+i+'"]:checked');
+    if(el){
+      answered++;
+      const ok=Number(el.value)===Number(q.answer);
+      if(ok)score++;else wrong++;
+      review.push({i,ok,chosen:Number(el.value)});
+    }else review.push({i,ok:false,chosen:null});
+  });
+  const unanswered=quizData.length-answered;
+  const result=$("quizResult");
+  result.innerHTML='<div class="quizResult"><div class="quizScore">'+score+' / '+quizData.length+'</div><b>Benar '+score+' soal</b> • Salah '+wrong+' soal • Belum dijawab '+unanswered+' soal • Dijawab '+answered+'/'+quizData.length+'<div class="quizReview">'+
+    review.map(x=>{const q=quizData[x.i];return '<div class="'+(x.ok?'correct':(x.chosen===null?'wrong':'wrong'))+'"><b>Soal '+(x.i+1)+': '+(x.ok?'Benar ✅':(x.chosen===null?'Belum dijawab ⏳':'Salah ❌'))+'</b><br>Jawaban benar: '+escapeHTML(q.options[q.answer])+(q.explanation?'<br>Penjelasan: '+escapeHTML(q.explanation):'')+'</div>'}).join('')+
+    '</div></div>';
+  result.scrollIntoView({behavior:"smooth",block:"start"});
+}
+/* ===== xKiro integration ===== */
+const XKIRO_ENDPOINT = "/api/xkiro";
+let xkiroModels = [];
+let xkiroSelectedModel = "";
+
+function xkiroModelSelect(){return document.getElementById("xkiroModel")}
+function openModelPicker(){
+  const m=document.getElementById("modelPicker");
+  if(!m)return;
+  m.classList.add("show");m.setAttribute("aria-hidden","false");document.body.classList.add("model-open");
+  const q=document.getElementById("modelSearch");q.value="";renderModelPicker();setTimeout(()=>q.focus(),50);
+}
+function closeModelPicker(){
+  const m=document.getElementById("modelPicker");
+  if(!m)return;
+  m.classList.remove("show");m.setAttribute("aria-hidden","true");document.body.classList.remove("model-open");
+}
+function xkiroSelectModel(id){
+  xkiroSelectedModel=id;
+  const m=xkiroModels.find(x=>x.id===id);
+  const label=document.getElementById("xkiroModelLabel");
+  if(label)label.textContent=m?.display_name||id;
+  renderModelPicker();
+  closeModelPicker();
+}
+function modelMatches(m,q){
+  if(!q)return true;
+  const hay=[m.id,m.display_name,m.owned_by,m.access_tier,m.modality].join(" ").toLowerCase();
+  return hay.includes(q.toLowerCase());
+}
+function renderModelPicker(){
+  const box=document.getElementById("modelList"),meta=document.getElementById("modelPickerMeta");
+  const q=(document.getElementById("modelSearch")?.value||"").trim();
+  if(!box)return;
+  const list=xkiroModels.filter(m=>modelMatches(m,q));
+  if(meta)meta.textContent=list.length+" model"+(list.length===1?"":"s")+" tersedia";
+  box.innerHTML="";
+  if(!list.length){box.innerHTML='<div style="padding:22px;text-align:center;color:#7188aa;font-size:12px">Model tidak ditemukan.</div>';return}
+  list.forEach(m=>{
+    const b=document.createElement("button");b.type="button";b.className="modelOption"+(m.id===xkiroSelectedModel?" active":"");
+    const c=m.capabilities||{},tags=[];
+    if(c.reasoning)tags.push("🧠 reasoning");if(c.vision)tags.push("👁 vision");if(c.tools)tags.push("🛠 tools");
+    const price=m.pricing?.input!=null ? "$"+Number(m.pricing.input).toFixed(2)+"/1M" : "";
+    b.innerHTML='<span class="modelDot"></span><span class="modelOptionMain"><span class="modelOptionName">'+escapeHtml(m.display_name||m.id)+'</span><span class="modelOptionSub">'+escapeHtml(m.id)+(m.owned_by?" • "+escapeHtml(m.owned_by):"")+(tags.length?" • "+tags.join(" • "):"")+(price?" • "+price:"")+'</span></span><span class="modelTier">'+escapeHtml(m.access_tier||"model")+'</span>';
+    b.onclick=()=>xkiroSelectModel(m.id);box.appendChild(b);
+  });
+}
+async function xkiroGetModels(){
+  const r=await fetch(XKIRO_ENDPOINT+"/models?modality=chat");
+  if(!r.ok)throw new Error("Katalog model xKiro gagal dimuat (HTTP "+r.status+").");
+  const d=await r.json();
+  return Array.isArray(d.data)?d.data:[];
+}
+async function xkiroInit(){
+  try{
+    xkiroModels=await xkiroGetModels();
+    if(!xkiroModels.length)throw new Error("Tidak ada model.");
+    const preferred=xkiroModels.find(m=>m.id==="openai/gpt-5.6-sol")||xkiroModels[0];
+    xkiroSelectedModel=preferred.id;
+    const label=document.getElementById("xkiroModelLabel");
+    if(label)label.textContent=preferred.display_name||preferred.id;
+    renderModelPicker();
+  }catch(e){
+    const label=document.getElementById("xkiroModelLabel");
+    if(label)label.textContent="Pilih model";
+    const meta=document.getElementById("modelPickerMeta");
+    if(meta)meta.textContent="Katalog belum tersedia • coba refresh halaman";
+  }
+}
+document.getElementById("modelSearch")?.addEventListener("input",renderModelPicker);
+document.getElementById("modelPicker")?.addEventListener("click",e=>{if(e.target.id==="modelPicker")closeModelPicker()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModelPicker()});
+xkiroInit();
+function escapeHtml(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+</script>
+
+
+</body>
+</html>
